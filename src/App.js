@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [name, setName] = useState();
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    const fetchName = async () => {
+      try {
+        const response = await fetch('https://ci-cd-backend-weczbghftq-uw.a.run.app/name');
+        const data = await response.json()
+        setName(data)
+      } catch (err) {
+        setError(err)
+      }
+    }
+    fetchName()
+  }, [])
+
+  if (error) {
+    <div>Sorry, the API isn't working</div>
+  }
+
+  if (name) {
+    return (
+      <div className="App">
+        Hi, my name is {name}
+      </div>
+    );
+  }
 }
 
 export default App;
